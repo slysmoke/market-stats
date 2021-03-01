@@ -2,7 +2,7 @@
 # Build project in separate container
 #
 
-FROM golang:alpine3.8 AS build
+FROM golang:alpine3.13 AS build
 
 RUN apk update && \
     apk upgrade && \
@@ -10,6 +10,9 @@ RUN apk update && \
 COPY . /go/src/github.com/EVE-Tools/market-stats
 
 WORKDIR /go/src/github.com/EVE-Tools/market-stats
+RUN go mod init github.com/EVE-Tools/market-stats
+RUN go get github.com/go-redis/redis/v8
+RUN go get go.opentelemetry.io/otel/label
 RUN go get -d -v ./...
 RUN go build
 RUN cp -r /go/src/github.com/EVE-Tools/market-stats/migrations /migrations
